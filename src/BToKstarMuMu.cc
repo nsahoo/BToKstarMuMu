@@ -10,9 +10,15 @@
  Implementation:
      [Notes on implementation]
 */
-//
+//=================================================================
 // Original Author:  Xin Shi <Xin.Shi@cern.ch>
 //         Created:  Mon Jan 28 11:06:56 CET 2013
+//        modified:  Niladribihari Sahoo <nsahoo@cern.ch>
+//
+//
+// Sep 21: added the track quality cut variables for muons(recommended by new soft muon id)
+//=================================================================
+//  
 // $Id$
 //
 //
@@ -367,6 +373,9 @@ private:
   vector<int>    *mumnpixhits, *mupnpixhits, *mumnpixlayers, *mupnpixlayers;
   vector<int>    *mumntrkhits, *mupntrkhits, *mumntrklayers, *mupntrklayers;
   vector<double> *mumnormchi2, *mupnormchi2;
+
+  vector<int> *mumtrkqual, *muptrkqual;    /* added quality vars */
+
   vector<double> *mumdxyvtx, *mupdxyvtx, *mumdzvtx, *mupdzvtx;
   vector<string> *mumtriglastfilter, *muptriglastfilter;
   vector<double> *mumpt, *muppt, *mumeta, *mupeta;
@@ -498,7 +507,9 @@ BToKstarMuMu::BToKstarMuMu(const edm::ParameterSet& iConfig):
   mumisgoodmuon(0), mupisgoodmuon(0),
   mumnpixhits(0), mupnpixhits(0), mumnpixlayers(0), mupnpixlayers(0),
   mumntrkhits(0), mupntrkhits(0), mumntrklayers(0), mupntrklayers(0),
-  mumnormchi2(0), mupnormchi2(0), mumdxyvtx(0), mupdxyvtx(0),
+  mumnormchi2(0), mupnormchi2(0), 
+  mumtrkqual(0), muptrkqual(0),         /* added on quality vars */
+  mumdxyvtx(0), mupdxyvtx(0),
   mumdzvtx(0), mupdzvtx(0), mumtriglastfilter(0), muptriglastfilter(0),
   mumpt(0), muppt(0), mumeta(0), mupeta(0),
 
@@ -668,6 +679,8 @@ BToKstarMuMu::beginJob()
   tree_->Branch("mupntrklayers", &mupntrklayers);
   tree_->Branch("mumnormchi2", &mumnormchi2);
   tree_->Branch("mupnormchi2", &mupnormchi2);
+  tree_->Branch("mumtrkqual", &mumtrkqual);  /* added quality vars */
+  tree_->Branch("muptrkqual", &muptrkqual);
   tree_->Branch("mumdxyvtx", &mumdxyvtx);
   tree_->Branch("mupdxyvtx", &mupdxyvtx);
   tree_->Branch("mumdzvtx", &mumdzvtx);
@@ -861,7 +874,9 @@ BToKstarMuMu::clearVariables(){
   mupnpixlayers->clear();
   mumntrkhits->clear();  mupntrkhits->clear();  mumntrklayers->clear();
   mupntrklayers->clear();
-  mumnormchi2->clear(); mupnormchi2->clear(); mumdxyvtx->clear(); mupdxyvtx->clear();
+  mumnormchi2->clear(); mupnormchi2->clear(); 
+  mumtrkqual->clear(); muptrkqual->clear();   /* added on 25 sep */
+  mumdxyvtx->clear(); mupdxyvtx->clear();
   mumdzvtx->clear(); mupdzvtx->clear();  mumtriglastfilter->clear();
   muptriglastfilter->clear();
   mumpt->clear(); muppt->clear();
@@ -2547,6 +2562,9 @@ BToKstarMuMu::saveSoftMuonVariables(pat::Muon iMuonM, pat::Muon iMuonP,
 
   mumnormchi2->push_back(muTrackm->normalizedChi2());
   mupnormchi2->push_back(muTrackp->normalizedChi2());
+
+  mumtrkqual->push_back(muTrackm->quality(reco::TrackBase::highPurity));   /*added on 25 sep*/
+  muptrkqual->push_back(muTrackp->quality(reco::TrackBase::highPurity));
 
   mumdxyvtx->push_back(muTrackm->dxy(primaryVertex_.position()));
   mupdxyvtx->push_back(muTrackp->dxy(primaryVertex_.position()));
