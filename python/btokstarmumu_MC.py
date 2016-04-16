@@ -2,7 +2,7 @@
 #  variables
 ################
 runMC               = True
-run2012not2011      = False  # True for 2012 and False for 2011
+run2012not2011      = True  # True for 2012 and False for 2011
 
 print "\n@@@ CMSSW run configuration flags @@@"
 
@@ -25,11 +25,11 @@ print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
 import FWCore.ParameterSet.Config as cms
 from btokstarmumu_cfi import process 
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
-       # fileNames = cms.untracked.vstring('root://eoscms//store/user/pchen/BToKstarMuMu/dat/AOD/BuToKstarMuMu_EtaPtFilter_8TeV-pythia6-evtgen_PU_RD2_START53_V19F-v2_AODSIM_FC45B39F-A5BC-E311-B2F8-0025901D4864.root' )
-         fileNames = cms.untracked.vstring('/store/mc/Summer11LegDR/BuToKstarMuMuV2_EtaPtFilter_7TeV-pythia6-evtgen/AODSIM/PU_S13_START53_LV6-v1/00000/000043B3-0E0B-E411-B2FE-0026189438E9.root')
+        fileNames = cms.untracked.vstring('/store/mc/Summer12_DR53X/BuToKstarMuMu_EtaPtFilter_8TeV-pythia6-evtgen/AODSIM/PU_RD2_START53_V19F-v1/00000/00BD783B-C44E-E311-B7D4-002590D0AF6C.root','/store/mc/Summer12_DR53X/BuToKstarMuMu_EtaPtFilter_8TeV-pythia6-evtgen/AODSIM/PU_RD2_START53_V19F-v1/00000/00E34DB5-EB4D-E311-8493-E0CB4E29C508.root' )
+#         fileNames = cms.untracked.vstring('/store/mc/Summer11LegDR/BuToKstarMuMuV2_EtaPtFilter_7TeV-pythia6-evtgen/AODSIM/PU_S13_START53_LV6-v1/00000/000043B3-0E0B-E411-B2FE-0026189438E9.root')
                         )
 
 if (run2012not2011 == True):
